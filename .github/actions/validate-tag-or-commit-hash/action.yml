@@ -1,0 +1,43 @@
+name: 'Validate git tag or commit hash'
+description: 'Validates if the input is a valid git tag or commit hash'
+
+inputs:
+    tag-or-hash:
+        description: 'Git Tag or commit hash to validate'
+        required: true
+
+outputs:
+    selected-tag-or-hash:
+        description: 'The validated tag or commit hash'
+        value: ${{ steps.validate.outputs.selected-tag-or-hash }}
+
+runs:
+    using: "composite"
+    steps:
+        -   name: Fetch all tags and commits
+            id: fetch-all-git-tags-commits
+            shell: bash
+            run: |
+                git fetch --tags --prune
+                echo "All tags and commits fetched."
+
+        -   name: Validate input tag or commit hash
+            id: validate
+            shell: bash
+            run: |
+                INPUT_HASH_TAG="${{ inputs.tag-or-hash }}"
+
+                # Check if the input is a valid tag or commit hash
+                TAG_EXISTS=$(git tag --list "$INPUT_HASH_TAG")
+                HASH_EXISTS=$(git cat-file -t "$INPUT_HASH_TAG" 2>/dev/null || echo "")
+
+                if [ -n "$TAG_EXISTS" ]; then
+                  echo "selected_hash_or_tag=$INPUT_HASH_TAG" >> $GITHUB_OUTPUT
+                  echo "Input is a valid tag: $INPUT_HASH_TAG"
+                elif [ "$HASH_EXISTS" == "commit" ]; then
+                  echo "selected_hash_or_tag=$INPUT_HASH_TAG" >> $GITHUB_OUTPUT
+                  echo "Input is a valid commit hash: $INPUT_HASH_TAG"
+                else
+                  echo "Error: The input is neither a valid Git tag nor a commit hash!" >&2
+                  exit 1
+                fi

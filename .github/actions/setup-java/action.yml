@@ -1,0 +1,19 @@
+name: 'Setup Oracle OpenJDK'
+description: 'Setup Oracle OpenJDK'
+
+inputs:
+    jdk-version:
+        description: 'Java version'
+        required: false
+
+runs:
+    using: "composite"
+    steps:
+        -   name: Set up JDK
+            id: setup-jdk
+            uses: oracle-actions/setup-java@v1
+            env:
+                default-jdk-version: 23
+            with:
+                website: jdk.java.net
+                release: ${{inputs.jdk-version || env.default-jdk-version }}
