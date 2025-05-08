@@ -1,12 +1,16 @@
-## Hi there 👋
+## BareMetalCode's Anvil Home
 
-<!--
+Home of [BareMetalCode's Anvil](https://www.bmc-anvil.com/) Showcase Project
 
-**Here are some ideas to get you started:**
+### Intro:
+**BMC's Anvil** aims to / will be (or maybe when you are reading this... actually is...) a fully functioning project manager tool.
 
-🙋‍♀️ A short introduction - what is your organization all about?
-🌈 Contribution guidelines - how can the community get involved?
-👩‍💻 Useful resources - where can the community find your docs? Is there anything else the community should know?
-🍿 Fun facts - what does your team eat for breakfast?
-🧙 Remember, you can do mighty things with the power of [Markdown](https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
--->
+This GitHub Organization hosts all repositories that give life to the project.
+
+### Contribution guidelines:
+Momentarily closed to contributions.
+
+### Resources:
+This is also a teaching project (maybe only teaching me...), showcasing techniques in dev, devops, infra, etc.
+
+I set up a site describing a little bit of the journey, decisions made, bibliography, etc.: https://www.bmc-anvil.com/

@@ -1,0 +1,40 @@
+name: build-test-auto-deploy
+on:
+    workflow_call:
+        inputs:
+            config-path:
+                required: true
+                type: string
+        secrets:
+            personal_access_token:
+                required: true
+    push:
+        branches: [ "master" ]
+    pull_request:
+        branches: [ "master" ]
+
+jobs:
+    build-test-deploy:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+
+        steps:
+            -   name: checkout the repository
+                uses: ./.github/actions/checkout-repository
+
+            -   name: Setup Java
+                uses: ./.github/actions/setup-java
+
+            -   name: Maven Cache
+                uses: ./.github/actions/mvn-cache
+
+            -   name: Maven build and verify
+                uses: ./.github/actions/mvn-build-verify
+
+            -   name: Maven project's version update with Git tag or hash
+                uses: ./.github/actions/mvn-version-setup
+
+            -   name: Maven Publish to Github Packages
+                uses: ./.github/actions/mvn-publish-to-gh
