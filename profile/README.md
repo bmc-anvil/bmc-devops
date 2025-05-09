@@ -3,7 +3,7 @@
 Home of [BareMetalCode's Anvil](https://www.bmc-anvil.com/) Showcase Project
 
 ### Intro:
-**BMC's Anvil** aims to / will be (or maybe when you are reading this... actually is...) a fully functioning project manager tool.
+**BMC's Anvil** aims to / will be (or maybe when you are reading this... actually is...) a fully functioning project management tool.
 
 This GitHub Organization hosts all repositories that give life to the project.
 

@@ -1,3 +1,5 @@
 # bmc-devops
 
-Home for Ci - Cd and tools. This is not and infrastructure repository
+Home for CI - CD and tools.
+
+This is not an infrastructure repository
