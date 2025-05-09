@@ -1,6 +1,6 @@
-name: build-test-auto-deploy
+name: BMC-Anvil java-mvn-build-test-auto-deploy
 on:
-    workflow_call:
+    workflow_dispatch:
         inputs:
             config-path:
                 required: true

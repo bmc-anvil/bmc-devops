@@ -1,0 +1,10 @@
+{
+    "name": "BMC-Anvil java-mvn-build-test-manual-deploy",
+    "description": "BMC-Anvil build-test-manual-deploy workflow template to build test and manually deploy a package.",
+    "iconName": "octicon tools",
+    "categories": [
+        "continuous-integration",
+        "Java",
+        "Maven"
+    ]
+}

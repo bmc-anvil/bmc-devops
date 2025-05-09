@@ -1,6 +1,6 @@
-name: manual-deploy
+name: BMC-Anvil java-mvn-build-test-manual-deploy
 on:
-    workflow_call:
+    workflow_dispatch:
         inputs:
             tag-or-hash:
                 description: "Git Tag or commit hash to deploy"
