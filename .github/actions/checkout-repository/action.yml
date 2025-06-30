@@ -1,9 +1,0 @@
-name: 'Checkout the repository'
-description: 'Checks out the repository'
-
-runs:
-    using: "composite"
-    steps:
-        -   name: checkout the repository
-            id: checkout-repository
-            uses: actions/checkout@v4
