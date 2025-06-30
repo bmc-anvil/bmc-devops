@@ -1,6 +1,15 @@
 name: build-test-deploy
 on:
     workflow_call:
+        inputs:
+            maven-profile:
+                required: false
+                type: string
+        secrets:
+            PACKAGES_USER:
+                required: true
+            PACKAGES_TOKEN_RW:
+                required: true
 
 jobs:
     build-test-deploy:
