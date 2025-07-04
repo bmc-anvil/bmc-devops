@@ -1,25 +1,21 @@
-name: build-test-deploy
+name: publish-package
 on:
     workflow_call:
         inputs:
-            maven-profile:
+            tag-or-hash:
+                description: "Optionally specify a Git Tag or commit hash to deploy"
                 required: false
                 type: string
-        secrets:
-            PACKAGES_USER:
-                required: true
-            PACKAGES_TOKEN_RW:
-                required: true
 
 jobs:
-    build-test-deploy:
+    publish-package:
         runs-on: ubuntu-latest
         permissions:
             contents: read
             packages: write
 
         steps:
-            -   name: checkout the repository
+            -   name: Checkout the repository
                 uses: actions/checkout@v4
 
             -   name: Setup Java
@@ -28,8 +24,9 @@ jobs:
             -   name: Setup Maven
                 uses: ./.github/actions/setup-maven
                 with:
-                    packages_user: ${{secrets.PACKAGES_USER}}
-                    packages_token: ${{secrets.PACKAGES_TOKEN_RW}}
+                    packages_user: ${{ secrets.PACKAGES_USER }}
+                    packages_token: ${{ secrets.PACKAGES_TOKEN_RW }}
+                    manual_version_selection: ${{ github.event.inputs.tag-or-hash != '' && env.SELECTED_VERSION || '' }}
 
             -   name: Build and Test
                 continue-on-error: true

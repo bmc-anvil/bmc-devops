@@ -1,6 +1,17 @@
 name: 'Setup Java'
 description: 'Download OpenJDK and set up Java'
 
+# Set up here the java version and url as defaults to use everywhere
+inputs:
+    java_version:
+        required: false
+        description: 'Java version'
+        default: '24.0.1'
+    java_url:
+        required: false
+        description: 'Url path to java JDK'
+        default: "https://download.java.net/java/GA/jdk24.0.1/24a58e0e276943138bf3e963e6291ac2/9/GPL/openjdk-24.0.1_linux-x64_bin.tar.gz"
+
 outputs:
     java-path:
         description: 'Path to the Java installation'
@@ -9,14 +20,12 @@ outputs:
 runs:
     using: "composite"
     steps:
-        -   name: download OpenJDK
+        -   name: Download OpenJDK
             id: download-openjdk
             shell: bash
-            env:
-                JDK_DOWNLOAD_URL: "https://download.java.net/java/GA/jdk24.0.1/24a58e0e276943138bf3e963e6291ac2/9/GPL/openjdk-24.0.1_linux-x64_bin.tar.gz"
             run: |
-                echo "downloading GNU GPL Licensed OpenJDK: https://jdk.java.net/24/"
-                wget -O $RUNNER_TEMP/java_package.tar.gz $JDK_DOWNLOAD_URL
+                echo "downloading GNU GPL Licensed OpenJDK ${{inputs.java_url}}"
+                wget -O $RUNNER_TEMP/java_package.tar.gz ${{inputs.java_url}}
 
         -   name: Set up JDK
             id: setup-java
@@ -24,10 +33,12 @@ runs:
             with:
                 distribution: 'jdkfile'
                 jdkFile: ${{ runner.temp }}/java_package.tar.gz
-                java-version: '24.0.1'
+                java-version: ${{inputs.java_version}}
                 architecture: x64
 
         -   name: Monitor Java vendor
+            id: monitor-java-monitor
             shell: bash
             run: |
+                echo "Java vendor is identified as: "
                 java -XshowSettings:properties -version 2>&1 | grep vendor
