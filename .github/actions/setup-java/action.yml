@@ -33,8 +33,8 @@ runs:
             id: download-openjdk
             shell: bash
             run: |
-                echo "downloading GNU GPL Licensed OpenJDK version: $JAVA_VERSION from $JAVA_URL"
-                wget -O $RUNNER_TEMP/java_package.tar.gz $JAVA_URL
+                echo "downloading GNU GPL Licensed OpenJDK version: ${{ env.JAVA_VERSION }} from ${{ env.JAVA_URL }}"
+                wget -O $RUNNER_TEMP/java_package.tar.gz "${{ env.JAVA_URL }}"
 
         -   name: Set up JDK
             id: setup-java
@@ -42,7 +42,7 @@ runs:
             with:
                 distribution: 'jdkfile'
                 jdkFile: ${{ runner.temp }}/java_package.tar.gz
-                java-version: ${{env.JAVA_VERSION}}
+                java-version: ${{ env.JAVA_VERSION }}
                 architecture: x64
 
         -   name: Monitor Java vendor
