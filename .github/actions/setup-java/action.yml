@@ -12,27 +12,29 @@ inputs:
 runs:
     using: "composite"
     steps:
-        -   name: Download OpenJDK
-            id: download-openjdk
+        -   name: Setup url and java version
+            id: setup-versions
             shell: bash
             env:
                 # Set up here the java version and url as defaults to use everywhere
                 JAVA_VERSION_DEFAULT: "24.0.1"
                 JAVA_URL_DEFAULT: "https://download.java.net/java/GA/jdk24.0.1/24a58e0e276943138bf3e963e6291ac2/9/GPL/openjdk-24.0.1_linux-x64_bin.tar.gz"
-
-                JAVA_VERSION: ${{ inputs.java_version == '' && env.JAVA_VERSION_DEFAULT || inputs.java_version}}
-                JAVA_URL: ${{ inputs.java_url == '' && env.JAVA_URL_DEFAULT || inputs.java_url }}
             run: |
                 JAVA_VERSION="${{ inputs.java_version }}"
                 JAVA_URL="${{ inputs.java_url }}"
                 if [ -z "$JAVA_VERSION" ]; then
-                    JAVA_VERSION="${{ env.JAVA_VERSION_DEFAULT }}"
+                    echo "JAVA_VERSION=${{ env.JAVA_VERSION_DEFAULT }}" >> $GITHUB_ENV
                 fi
                 if [ -z "$JAVA_URL" ]; then
-                    JAVA_URL="${{ env.JAVA_URL_DEFAULT }}"
+                    echo "JAVA_URL=${{ env.JAVA_URL_DEFAULT }}"  >> $GITHUB_ENV
                 fi
+
+        -   name: Download OpenJDK
+            id: download-openjdk
+            shell: bash
+            run: |
                 echo "downloading GNU GPL Licensed OpenJDK version: $JAVA_VERSION from $JAVA_URL"
-                wget -O $RUNNER_TEMP/java_package.tar.gz $JAVA_VERSION
+                wget -O $RUNNER_TEMP/java_package.tar.gz $JAVA_URL
 
         -   name: Set up JDK
             id: setup-java
@@ -40,7 +42,7 @@ runs:
             with:
                 distribution: 'jdkfile'
                 jdkFile: ${{ runner.temp }}/java_package.tar.gz
-                java-version: ${{inputs.java_version}}
+                java-version: ${{env.JAVA_VERSION}}
                 architecture: x64
 
         -   name: Monitor Java vendor
