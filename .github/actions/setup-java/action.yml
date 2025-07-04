@@ -20,10 +20,18 @@ runs:
                 JAVA_VERSION_DEFAULT: "24.0.1"
                 JAVA_URL_DEFAULT: "https://download.java.net/java/GA/jdk24.0.1/24a58e0e276943138bf3e963e6291ac2/9/GPL/openjdk-24.0.1_linux-x64_bin.tar.gz"
 
-                JAVA_VERSION: ${{ inputs.java_version != '' && inputs.java_version || env.JAVA_VERSION_DEFAULT }}
-                JAVA_URL: ${{ inputs.java_url != '' && inputs.java_url  || env.JAVA_URL_DEFAULT }}
+                JAVA_VERSION: ${{ inputs.java_version == '' && env.JAVA_VERSION_DEFAULT || inputs.java_version}}
+                JAVA_URL: ${{ inputs.java_url == '' && env.JAVA_URL_DEFAULT || inputs.java_url }}
             run: |
-                echo "downloading GNU GPL Licensed OpenJDK version: $JAVA_VERSION_DEFAULT from $JAVA_URL_DEFAULT"
+                JAVA_VERSION="${{ inputs.java_version }}"
+                JAVA_URL="${{ inputs.java_url }}"
+                if [ -z "$JAVA_VERSION" ]; then
+                    JAVA_VERSION="${{ env.JAVA_VERSION_DEFAULT }}"
+                fi
+                if [ -z "$JAVA_URL" ]; then
+                    JAVA_URL="${{ env.JAVA_URL_DEFAULT }}"
+                fi
+                echo "downloading GNU GPL Licensed OpenJDK version: $JAVA_VERSION from $JAVA_URL"
                 wget -O $RUNNER_TEMP/java_package.tar.gz $JAVA_VERSION
 
         -   name: Set up JDK
