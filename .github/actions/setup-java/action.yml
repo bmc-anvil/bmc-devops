@@ -17,13 +17,13 @@ runs:
             shell: bash
             env:
                 # Set up here the java version and url as defaults to use everywhere
-                JAVA_VERSION_DEFAULT: '24.0.1'
-                JAVA_URL_DEFAULT: 'https://download.java.net/java/GA/jdk24.0.1/24a58e0e276943138bf3e963e6291ac2/9/GPL/openjdk-24.0.1_linux-x64_bin.tar.gz'
+                JAVA_VERSION_DEFAULT: "24.0.1"
+                JAVA_URL_DEFAULT: "https://download.java.net/java/GA/jdk24.0.1/24a58e0e276943138bf3e963e6291ac2/9/GPL/openjdk-24.0.1_linux-x64_bin.tar.gz"
 
                 JAVA_VERSION: ${{ inputs.java_version != '' && inputs.java_version || env.JAVA_VERSION_DEFAULT }}
                 JAVA_URL: ${{ inputs.java_url != '' && inputs.java_url  || env.JAVA_URL_DEFAULT }}
             run: |
-                echo "downloading GNU GPL Licensed OpenJDK version: $JAVA_VERSION from $JAVA_URL"
+                echo "downloading GNU GPL Licensed OpenJDK version: $JAVA_VERSION_DEFAULT from $JAVA_URL_DEFAULT"
                 wget -O $RUNNER_TEMP/java_package.tar.gz $JAVA_VERSION
 
         -   name: Set up JDK
