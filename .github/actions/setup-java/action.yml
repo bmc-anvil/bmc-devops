@@ -23,9 +23,12 @@ runs:
         -   name: Download OpenJDK
             id: download-openjdk
             shell: bash
+            env:
+                JAVA_URL: ${{inputs.java_url}}
+                JAVA_VERSION: ${{inputs.java_version}}
             run: |
-                echo "downloading GNU GPL Licensed OpenJDK ${{inputs.java_url}}"
-                wget -O $RUNNER_TEMP/java_package.tar.gz ${{inputs.java_url}}
+                echo "downloading GNU GPL Licensed OpenJDK version: $JAVA_VERSION from $JAVA_URL"
+                wget -O $RUNNER_TEMP/java_package.tar.gz $JAVA_VERSION
 
         -   name: Set up JDK
             id: setup-java
