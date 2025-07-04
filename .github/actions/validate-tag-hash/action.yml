@@ -24,10 +24,8 @@ runs:
                 HASH_EXISTS=$(git cat-file -t "$INPUT_VERSION" 2>/dev/null || echo "")
 
                 if [ -n "$TAG_EXISTS" ]; then
-                  echo "SELECTED_VERSION=$INPUT_VERSION" >> $GITHUB_ENV
                   echo "Input is a valid tag: $INPUT_VERSION"
                 elif [ "$HASH_EXISTS" == "commit" ]; then
-                  echo "SELECTED_VERSION=$INPUT_VERSION" >> $GITHUB_ENV
                   echo "Input is a valid commit hash: $INPUT_VERSION"
                 else
                   echo "Error: The input is neither a valid Git tag nor a commit hash!" >&2

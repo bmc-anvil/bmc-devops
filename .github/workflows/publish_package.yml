@@ -6,6 +6,14 @@ on:
                 description: "Optionally specify a Git Tag or commit hash to deploy"
                 required: false
                 type: string
+            java_version:
+                required: false
+                description: 'Java version'
+                type: string
+            java_url:
+                required: false
+                description: 'Url path to java JDK'
+                type: string
 
 jobs:
     publish-package:
@@ -20,13 +28,16 @@ jobs:
 
             -   name: Setup Java
                 uses: ./.github/actions/setup-java
+                with:
+                    java_version: ${{inputs.java_version}}
+                    java_url: ${{inputs.java_url}}
 
             -   name: Setup Maven
                 uses: ./.github/actions/setup-maven
                 with:
                     packages_user: ${{ secrets.PACKAGES_USER }}
                     packages_token: ${{ secrets.PACKAGES_TOKEN_RW }}
-                    manual_version_selection: ${{ github.event.inputs.tag-or-hash != '' && env.SELECTED_VERSION || '' }}
+                    manual_version_selection: ${{ inputs.tag-or-hash }}
 
             -   name: Build and Test
                 continue-on-error: true
