@@ -1,9 +1,5 @@
 name: 'Checkstyle Code Scan'
 description: 'Runs Checkstyle scanner on codebase'
-author: BMC - Xavier
-branding:
-    color: blue
-    icon: shield
 
 inputs:
     fail-on-violations:
