@@ -18,6 +18,7 @@ runs:
                 mkdir -p ~/.m2
                 cat > ~/.m2/settings.xml <<EOF
                 <settings>
+                    <localRepository>${user.home}/.m2/repository</localRepository>
                     <servers>
                         <server>
                             <id>github</id>
