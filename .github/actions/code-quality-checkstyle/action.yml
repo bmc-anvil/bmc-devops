@@ -1,0 +1,30 @@
+name: 'Checkstyle Code Scan'
+description: 'Runs Checkstyle scanner on codebase'
+author: BMC - Xavier
+branding:
+    color: blue
+    icon: shield
+
+inputs:
+    fail-on-violations:
+        required: false
+        description: 'Which files to scan based on checkfile configuration options'
+
+runs:
+    using: "composite"
+    steps:
+        -   name: Run checkstyle with maven
+            id: run-checkstyle-scan
+            shell: bash
+            env:
+                FAIL_FLAG: ${{ inputs.fail-on-violations }}
+            run: |
+                if [ -z "$FAIL_FLAG" ]; then
+                    echo "FAIL_FLAG=true" >> $GITHUB_ENV
+                fi
+                ./mvnw checkstyle:check -Dcheckstyle.failOnViolation="${{ env.FAIL_FLAG }}"
+
+        -   name: Upload SARIF to GitHub Security tab
+            uses: github/codeql-action/upload-sarif@v3
+            with:
+                sarif_file: target/checkstyle-result.sarif

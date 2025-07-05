@@ -46,6 +46,11 @@ jobs:
                     packages_token: ${{ secrets.PACKAGES_TOKEN_RW }}
                     manual_version_selection: ${{ inputs.tag-or-hash }}
 
+            -   name: Checkstyle
+                uses: bmc-anvil/bmc-devops/.github/actions/code-quality-checkstyle@master
+                with:
+                    fail-on-violations: 'false'
+
             -   name: Build and Test
                 continue-on-error: true
                 run: ./mvnw clean verify

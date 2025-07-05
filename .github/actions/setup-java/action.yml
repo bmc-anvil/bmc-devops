@@ -19,9 +19,11 @@ runs:
                 # Set up here the java version and url as defaults to use everywhere
                 JAVA_VERSION_DEFAULT: "24.0.1"
                 JAVA_URL_DEFAULT: "https://download.java.net/java/GA/jdk24.0.1/24a58e0e276943138bf3e963e6291ac2/9/GPL/openjdk-24.0.1_linux-x64_bin.tar.gz"
+
+                # Set up here the java version and url from inputs
+                JAVA_VERSION: ${{ inputs.java_version }}
+                JAVA_URL: ${{ inputs.java_url }}
             run: |
-                JAVA_VERSION="${{ inputs.java_version }}"
-                JAVA_URL="${{ inputs.java_url }}"
                 if [ -z "$JAVA_VERSION" ]; then
                     echo "JAVA_VERSION=${{ env.JAVA_VERSION_DEFAULT }}" >> $GITHUB_ENV
                 fi
