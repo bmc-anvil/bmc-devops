@@ -21,6 +21,9 @@ on:
             PACKAGES_TOKEN_RW:
                 required: true
                 description: 'Packages token from workflow'
+            GH_TOKEN:
+                required: true
+                description: 'The GitHub token from the calling workflow'
 
 jobs:
     publish-package:
@@ -51,6 +54,7 @@ jobs:
                 uses: bmc-anvil/bmc-devops/.github/actions/code-quality-checkstyle@master
                 with:
                     fail-on-violations: 'false'
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: Build and Test
                 continue-on-error: true

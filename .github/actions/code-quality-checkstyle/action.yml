@@ -9,6 +9,9 @@ inputs:
     fail-on-violations:
         required: false
         description: 'Which files to scan based on checkfile configuration options'
+    github-token:
+        required: true
+        description: 'the github token to authenticate this action'
 
 runs:
     using: "composite"
@@ -28,3 +31,5 @@ runs:
             uses: github/codeql-action/upload-sarif@v3
             with:
                 sarif_file: target/checkstyle-result.sarif
+                category: checkstyle
+                token: ${{ inputs.github-token }}
