@@ -38,6 +38,9 @@ jobs:
             security-events: write
 
         steps:
+            -   name: Checkout the repository
+                uses: actions/checkout@v4
+
             -   name: Validate Tag or Commit Hash and Sets either manual or current ref as PROJECT_VERSION
                 uses: bmc-anvil/bmc-devops/.github/actions/validate-and-set-tag-hash@master
                 with:
@@ -45,6 +48,7 @@ jobs:
                     github-token: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: Checkout the repository
+                if: ${{ inputs.tag-or-hash != '' }}
                 uses: actions/checkout@v4
                 with:
                     ref: ${{ env.PROJECT_VERSION }}
