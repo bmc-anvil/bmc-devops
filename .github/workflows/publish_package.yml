@@ -68,7 +68,7 @@ jobs:
                     github-token: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: Build and Test
-                uses: bmc-anvil/bmc-devops/.github/actions/maven/verify@master
+                uses: bmc-anvil/bmc-devops/.github/actions/maven/install@master
                 continue-on-error: true
 
             -   name: Setup Project Version
