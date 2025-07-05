@@ -14,7 +14,7 @@ runs:
     steps:
         -   name: Deploy Project to Registry
             shell: bash
-            if: ${{ deploy-package == 'true' }}
+            if: ${{ inputs.deploy-package == 'true' }}
             env:
                 GITHUB_TOKEN: ${{ inputs.github-token }}
             run: |
