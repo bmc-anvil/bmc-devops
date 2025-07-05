@@ -18,4 +18,12 @@ runs:
             env:
                 GITHUB_TOKEN: ${{ inputs.github-token }}
             run: |
+                ./mvnw deploy -Pdeployable-jar -N
+
+        -   name: Deploy Project to Registry
+            shell: bash
+            if: ${{ inputs.deploy-package == 'true' }}
+            env:
+                GITHUB_TOKEN: ${{ inputs.github-token }}
+            run: |
                 ./mvnw deploy -Pdeployable-jar
