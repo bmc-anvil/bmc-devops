@@ -8,9 +8,6 @@ inputs:
     packages_token:
         required: true
         description: 'Packages token from workflow'
-    manual_version_selection:
-        required: false
-        description: 'Manual selection of a tag or commit hash'
 
 runs:
     using: "composite"
@@ -41,29 +38,3 @@ runs:
                 key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
                 restore-keys: |
                     ${{ runner.os }}-maven-
-
-        -   name: Validate Manually Selected Tag or Commit Hash
-            uses: ./.github/actions/validate-tag-hash
-            if: ${{ inputs.manual_version_selection != '' }}
-            with:
-                tag-or-hash: ${{ inputs.manual_version_selection }}
-
-        -   name: Version setup (Tag or Commit Hash)
-            shell: bash
-            run: |
-                if [ -n "${{ inputs.manual_version_selection }}" ]; then
-                  echo "PROJECT_VERSION=${{ inputs.manual_version_selection }}" >> $GITHUB_ENV
-                else
-                  TAG=$(git describe --tags --exact-match 2>/dev/null || echo "")
-                  if [ -z "$TAG" ]; then
-                    GIT_HASH=$(git rev-parse --short HEAD)
-                    echo "PROJECT_VERSION=$GIT_HASH" >> $GITHUB_ENV
-                  else
-                    echo "PROJECT_VERSION=$TAG" >> $GITHUB_ENV
-                  fi
-                fi
-
-        -   name: Update Maven version with Git tag or hash
-            shell: bash
-            run: |
-                ./mvnw versions:set -DnewVersion="${{ env.PROJECT_VERSION }}"

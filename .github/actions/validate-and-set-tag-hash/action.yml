@@ -12,12 +12,11 @@ runs:
         -   name: Validate input version (manual run only)
             shell: bash
             if: ${{ inputs.tag-or-hash != '' }}
-            id: version-validate
+            env:
+                INPUT_VERSION: ${{ inputs.tag-or-hash }}
             run: |
                 git fetch --tags --prune
                 echo "All tags and commits fetched."
-
-                INPUT_VERSION="${{ inputs.tag-or-hash }}"
 
                 # Check if the input is a valid tag or commit hash
                 TAG_EXISTS=$(git tag --list "$INPUT_VERSION")
@@ -30,4 +29,22 @@ runs:
                 else
                   echo "Error: The input is neither a valid Git tag nor a commit hash!" >&2
                   exit 1
+                fi
+
+        -   name: Manual version setup
+            shell: bash
+            if: ${{ inputs.tag-or-hash != ''}}
+            run: |
+                echo "PROJECT_VERSION=${{ inputs.tag-or-hash }}" >> $GITHUB_ENV
+
+        -   name: Version setup (Tag or Commit Hash)
+            shell: bash
+            if: ${{ inputs.tag-or-hash == ''}}
+            run: |
+                TAG=$(git describe --tags --exact-match 2>/dev/null || echo "")
+                if [ -z "$TAG" ]; then
+                  GIT_HASH=$(git rev-parse --short HEAD)
+                  echo "PROJECT_VERSION=$GIT_HASH" >> $GITHUB_ENV
+                else
+                  echo "PROJECT_VERSION=$TAG" >> $GITHUB_ENV
                 fi

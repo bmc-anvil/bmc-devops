@@ -14,6 +14,10 @@ on:
                 required: false
                 description: 'Url path to java JDK'
                 type: string
+            deploy_package:
+                required: false
+                description: "Flag to deploy a package to GH Registry"
+                type: boolean
         secrets:
             PACKAGES_USER:
                 required: true
@@ -34,8 +38,16 @@ jobs:
             security-events: write
 
         steps:
+            -   name: Validate Tag or Commit Hash and Sets either manual or current ref as PROJECT_VERSION
+                uses: bmc-anvil/bmc-devops/.github/actions/validate-and-set-tag-hash@master
+                if: ${{ inputs.tag-or-hash != '' }}
+                with:
+                    tag-or-hash: ${{ inputs.tag-or-hash }}
+
             -   name: Checkout the repository
                 uses: actions/checkout@v4
+                with:
+                    ref: ${{ env.PROJECT_VERSION }}
 
             -   name: Setup Java
                 uses: bmc-anvil/bmc-devops/.github/actions/setup-java@master
@@ -44,23 +56,26 @@ jobs:
                     java_url: ${{inputs.java_url}}
 
             -   name: Setup Maven
-                uses: bmc-anvil/bmc-devops/.github/actions/setup-maven@master
+                uses: bmc-anvil/bmc-devops/.github/actions/maven/setup@master
                 with:
                     packages_user: ${{ secrets.PACKAGES_USER }}
                     packages_token: ${{ secrets.PACKAGES_TOKEN_RW }}
-                    manual_version_selection: ${{ inputs.tag-or-hash }}
 
-            -   name: Checkstyle
-                uses: bmc-anvil/bmc-devops/.github/actions/code-quality-checkstyle@master
+            -   name: Run Checkstyle
+                uses: bmc-anvil/bmc-devops/.github/actions/maven/code-quality-checkstyle@master
                 with:
                     fail-on-violations: 'false'
                     github-token: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: Build and Test
+                uses: bmc-anvil/bmc-devops/.github/actions/maven/verify@master
                 continue-on-error: true
-                run: ./mvnw clean verify
 
-            -   name: Publish to Github Packages
-                run: ./mvnw deploy -Pdeployable-jar
-                env:
-                    GITHUB_TOKEN: ${{ secrets.PACKAGES_TOKEN_RW }}
+            -   name: Setup Project Version
+                uses: bmc-anvil/bmc-devops/.github/actions/maven/setup-version@master
+
+            -   name: Deploy to Github Packages Registry
+                uses: bmc-anvil/bmc-devops/.github/actions/maven/deploy-package@master
+                with:
+                    github-token: ${{ secrets.PACKAGES_TOKEN_RW }}
+                    deploy-package: ${{ inputs.deploy_package }}
