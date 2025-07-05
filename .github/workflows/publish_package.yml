@@ -42,6 +42,7 @@ jobs:
                 uses: bmc-anvil/bmc-devops/.github/actions/validate-and-set-tag-hash@master
                 with:
                     tag-or-hash: ${{ inputs.tag-or-hash }}
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: Checkout the repository
                 uses: actions/checkout@v4

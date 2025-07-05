@@ -4,7 +4,10 @@ description: 'validates Tag or Hash to be used as project version in pom'
 inputs:
     tag-or-hash:
         required: false
-        description: 'tag or hash to validate'
+        description: 'Tag or hash to validate'
+    github-token:
+        required: true
+        description: 'The GH token'
 
 runs:
     using: "composite"
@@ -14,6 +17,7 @@ runs:
             if: ${{ inputs.tag-or-hash != '' }}
             env:
                 INPUT_VERSION: ${{ inputs.tag-or-hash }}
+                GITHUB_TOKEN: ${{ inputs.github-token }}
             run: |
                 git fetch --tags --prune
                 echo "All tags and commits fetched."
@@ -40,6 +44,8 @@ runs:
         -   name: Version setup (Tag or Commit Hash)
             shell: bash
             if: ${{ inputs.tag-or-hash == ''}}
+            env:
+                GITHUB_TOKEN: ${{ inputs.github-token }}
             run: |
                 TAG=$(git describe --tags --exact-match 2>/dev/null || echo "")
                 if [ -z "$TAG" ]; then
