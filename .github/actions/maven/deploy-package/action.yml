@@ -18,4 +18,5 @@ runs:
             env:
                 GITHUB_TOKEN: ${{ inputs.github-token }}
             run: |
+                cat ~/.m2/settings.xml
                 ./mvnw deploy -Pdeployable-jar -X
