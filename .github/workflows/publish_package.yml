@@ -18,6 +18,12 @@ on:
                 required: false
                 description: "Flag to deploy a package to GH Registry"
                 type: boolean
+            checkstyle_skip:
+                required: false
+                description: 'Flag to skip the step altogether'
+                type: boolean
+                default: true
+
         secrets:
             PACKAGES_USER:
                 required: true
@@ -73,6 +79,7 @@ jobs:
                 with:
                     fail-on-violations: 'false'
                     github-token: ${{ secrets.GITHUB_TOKEN }}
+                    checkstyle_skip: ${{ inputs.checkstyle_skip }}
 
             -   name: Build and Test
                 uses: bmc-anvil/bmc-devops/.github/actions/maven/install@master
