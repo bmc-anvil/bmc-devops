@@ -54,12 +54,6 @@ jobs:
                     java_version: ${{inputs.java_version}}
                     java_url: ${{inputs.java_url}}
 
-            -   name: Setup Maven
-                uses: bmc-anvil/bmc-devops/.github/actions/maven/setup@master
-                with:
-                    packages_user: ${{ secrets.PACKAGES_USER }}
-                    packages_token: ${{ secrets.PACKAGES_TOKEN_RW }}
-
             -   name: Cache Maven dependencies
                 uses: actions/cache@v4
                 with:
@@ -67,6 +61,12 @@ jobs:
                     key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
                     restore-keys: |
                         ${{ runner.os }}-maven-
+
+            -   name: Setup Maven
+                uses: bmc-anvil/bmc-devops/.github/actions/maven/setup@master
+                with:
+                    packages_user: ${{ secrets.PACKAGES_USER }}
+                    packages_token: ${{ secrets.PACKAGES_TOKEN_RW }}
 
             -   name: Run Checkstyle
                 uses: bmc-anvil/bmc-devops/.github/actions/maven/code-quality-checkstyle@master
